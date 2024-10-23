@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bengaluru Crime Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://www.transparenttextures.com/patterns/white-linen.png') repeat;
+            color: #002366; /* Dark Blue */
+            scroll-behavior: smooth; /* Smooth scrolling */
+        }
+
+        .header {
+    background-color: #002366; /* Dark Blue */
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed; /* Makes the header fixed at the top */
+    top: 0; /* Sticks the header to the top of the page */
+    left: 0; /* Aligns the header to the left */
+    width: 100%; /* Ensures the header spans the full width */
+    z-index: 1000; /* Ensures the header is above other content */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow */
+}
+body {
+    padding-top: 60px; /* Prevents content overlap with the fixed header */
+}
+
+        .header .title {
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+        }
+
+        .header .nav {
+            display: flex; /* Align nav items in a row */
+        }
+
+        .header .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            transition: color 0.3s;
+        }
+
+        .header .nav a:hover {
+            color: #FF6600; /* Orange */
+        }
+
+        .landing-section {
+            background-image: url('https://images.fineartamerica.com/images/artworkimages/mediumlarge/3/26-bengaluru-skyline-india-bangalore-michael-tompsett.jpg');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            padding: 150px 20px;
+            color: white;
+            position: relative;
+        }
+
+        .landing-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+            z-index: 1;
+        }
+
+        .landing-section h1 {
+            font-size: 52px; /* Larger size for the heading */
+            margin-bottom: 10px; /* Space below the heading */
+            position: relative;
+            z-index: 2;
+        }
+
+        .landing-section p {
+            font-size: 20px; /* Adjusted size for the paragraph */
+            margin-bottom: 20px; /* Space below the paragraph */
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-button {
+            background-color: #FF6600; /* Orange */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-button:hover {
+            background-color: #007BFF; /* Light Blue */
+        }
+
+        
+
+        .card {
+            background-color: white; 
+            border:2px solid #FF6600;
+            padding: 20px;
+            margin: 10px; /* Margin for spacing */
+            flex: 1 1 calc(45% - 30px); 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            text-align: center;
+           
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale (1.02);
+            background-color:  rgba(255, 102, 0, 0.9);
+            color: white;
+        }
+
+        .card h3 {
+            color: #002366; /* Dark Blue */
+            margin: 15px 0;
+        }
+
+        .card p {
+            color: #232323; /* Darker Gray for text */
+        }
+
+        .card-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    flex-wrap: wrap; /* Allow wrapping */
+   gap:20px;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    
+}
+
+.card-container.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Dropdown content styling */
+.dropdown-content {
+    display: none; /* Hidden by default */
+    position: absolute; /* Change to relative */
+    background-color: white; /* Light blue background */
+    border: 1px solid #070707; /* Light gray border */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    z-index: 10; /* Stack above other elements */
+    padding: 10px; /* Padding inside dropdown */
+    margin-top: 10px; 
+    color: #002366;/* Space above dropdown */
+}
+.dropdown-content h4 {
+    color: #002366; /* Change the color to dark blue */
+    font-size: 18px; /* Adjust font size */
+    margin-bottom: 10px; /* Add space below heading */
+}
+/* Show dropdown on card hover */
+.card:hover .dropdown-content {
+    display: block; /* Show dropdown */
+    opacity: 1; /* Make it visible */
+    visibility: visible; /* Make it visible */
+}
+
+/* Arrow for the dropdown */
+.dropdown-content::before {
+    content: '';
+    position: absolute;
+    top: -10px; /* Position at the top of the dropdown */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent rgba(255, 153, 51, 0.9) transparent; /* Lighter orange arrow */
+}
+
+/* Show dropdown on card hover */
+.card:hover .dropdown-content {
+    display: block; /* Show dropdown */
+    
+}
+
+
+
+        .footer {
+            background-color: #002366; /* Dark Blue */
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin-top: auto;
+        }
+
+        .footer .social-icons a {
+            color: #FF6600; /* Orange */
+            margin: 0 10px;
+            font-size: 20px;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer a:hover {
+            color: #FF6600; /* Orange */
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5); /* Dark overlay */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input, textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        button[type="submit"] {
+            background-color: #FF6600;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px; /* Font size */
+    font-weight: bold; /* Bold text */
+        }
+
+        button[type="submit"]:hover {
+            background-color: #007BFF;
+            transform: scale(1.05);
+        }
+        button[type="submit"]:focus {
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 5px #007BFF, 0 0 10px #007BFF; /* Add a glow effect when focused */
+}
+
+button[type="submit"]:active {
+    transform: scale(0.95); /* Slightly scale down when the button is pressed */}
+
+        .chat-popup {
+            position: fixed;
+            bottom: 80px; /* Adjust positioning */
+            right: 20px; /* Adjust positioning */
+            background-color: white; /* Popup background */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            width: 300px; /* Set a width */
+            display: none; /* Initially hidden */
+            z-index: 1000; /* Ensure it’s on top */
+            
+        }
+        .popup-title {
+    text-align: center; /* Center the title text */
+    font-size: 24px; /* Make the font size larger */
+    color: #FF6600; /* Optional: set a color for the title */
+    margin-bottom: 15px; /* Space below the title */
+}
+        .chat-header {
+            background-color: orange; /* Header background color */
+            color: white; /* Header text color */
+            padding: 10px; /* Padding for header */
+            border-top-left-radius: 8px; /* Rounded corners for header */
+            border-top-right-radius: 8px; /* Rounded corners for header */
+            display: flex; /* Flex layout for title and close button */
+            justify-content: space-between; /* Space between elements */
+            align-items: center; /* Center align items */
+        }
+
+        .chat-messages {
+            max-height: 200px; /* Set a max height for messages */
+            overflow-y: auto; /* Allow scrolling */
+            padding: 10px; /* Padding for messages */
+        }
+
+        .bot-message {
+            background-color: #f1f1f1; /* Bot message background color */
+            border-radius: 15px; /* Rounded corners for messages */
+            padding: 10px; /* Padding for message */
+            margin: 5px 0; /* Space between messages */
+            max-width: 80%; /* Limit message width */
+            word-wrap: break-word; /* Wrap long words */
+            position: relative; /* Position for triangle */
+            padding: 12px 20px; /* More padding for bubble effect */
+        }
+
+        .bot-message::after {
+            content: "";
+            position: absolute;
+            bottom: 100%; /* Position above the bubble */
+            left: 20px; /* Adjust for arrow placement */
+            border-width: 10px; /* Arrow size */
+            border-style: solid; /* Arrow style */
+            border-color: transparent transparent #f1f1f1 transparent; /* Triangle color */
+        }
+
+        .chat-button {
+            position: fixed;
+            bottom: 20px; /* Adjust positioning */
+            right: 20px; /* Adjust positioning */
+            background-color: #007BFF; /* Updated button background color */
+            color: white; /* Button text color */
+            border: none; /* Remove border */
+            border-radius: 50%; /* Round button */
+            padding: 15px; /* Padding for button */
+            cursor: pointer; /* Change cursor to pointer */
+            z-index: 1000; /* Ensure it’s on top */
+            width: 60px; /* Set button width */
+            height: 60px; /* Set button height */
+            display: none; /* Initially hidden */
+            justify-content: center; /* Center icon */
+            align-items: center; /* Center icon */
+            font-size: 28px; /* Increase font size for emoji */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        .chat-button:hover {
+            background-color: orange; /* Darker shade on hover */
+        }
+
+        @media (max-width: 400px) {
+    .header .nav a {
+        margin: 0 5px; /* Adjust margin for small screens */
+    }
+
+    .landing-section h1 {
+        font-size: 36px; /* Smaller heading size for mobile */
+    }
+
+    .landing-section p {
+        font-size: 16px; /* Adjust paragraph size for mobile */
+    }
+    a:focus, button:focus {
+    outline: 2px dashed #FF6600; /* Provide a clear focus style */
+    outline-offset: 2px; /* Add spacing for clarity */
+}
+.dropdown-content ul {
+    padding-left: 20px; /* Indent the list */
+    list-style-type: disc; /* Show bullet points */
+}.dropdown-content ul li {
+    margin-bottom: 5px; /* Space between list items */
+    color: black; /* Ensure text color is visible */
+}
+
+}
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">🛡️ Bengaluru Crime Chat</div>
+        <div class="nav">
+            <a href="#">Home</a>
+            <a href="chatbot.html" class="report-button">Report a Crime</a>
+            
+            <a href="#" id="contactBtn">Contact Us</a> <!-- Updated to include contact button -->
+        </div>
+    </div>
+
+    <div class="landing-section">
+        <h1>Welcome to Bengaluru Crime Chat</h1>
+        <p>A platform that helps you report crimes, find nearby police stations, and access essential safety tips.</p>
+
+        
+    </div>
+
+    
+    <div class="card-container show">
+        <!-- Crime Classification Card -->
+        <div class="card" aria-label="Crime Classification">
+            <h3><i class="fas fa-search"></i> Crime Classification</h3>
+           
+                
+                <p>Discover the crime category an action belongs to, whether it's minor or major.</p>
+                <div class="dropdown-content">
+                    <h4>Crime Classification Details</h4>
+                    <p>Crime classification involves categorizing illegal activities based on the legal framework provided by the Indian Penal Code (IPC). Crimes are broadly classified into:</p>
+                    <ul>
+                        <li><strong>Offenses against the State:</strong> Such as sedition, waging war against the government (Section 121-130 IPC).</li>
+                        <li><strong>Offenses against Property:</strong> Crimes like theft, robbery, burglary, and extortion (Section 378-462 IPC).</li>
+                        <li><strong>Offenses against the Human Body:</strong> Including murder, assault, and kidnapping (Section 299-377 IPC).</li>
+                        <li><strong>Offenses related to Marriage:</strong> Bigamy, adultery, and cruelty by a spouse (Section 494-498 IPC).</li>
+                        <li><strong>Offenses against Public Tranquility:</strong> Rioting, unlawful assembly, and promoting enmity between groups (Section 141-160 IPC).</li>
+                    </ul>
+                    <p>These classifications help in determining the appropriate legal proceedings and penalties based on the severity and nature of the crime.</p>
+                </div>
+            </div>
+
+        <div class="card" aria-label="Nearby Police Stations">
+            <h3><i class="fas fa-map-marker-alt"></i> Nearby Police Stations</h3>
+            <p>Locate the nearest police stations based on your current location or the location of the crime.</p>
+            <div class="dropdown-content">
+                <h4>Nearby Police Stations Information</h4>
+                <ul>
+                    <li>Get real-time information on the addresses of nearby police stations.</li>
+                    <li>Find contact numbers for immediate assistance from local police.</li>
+                    <li>Reach out via email for non-urgent inquiries or information.</li>
+                    <li>Locate police stations on a map for easy navigation.</li>
+                </ul>
+                <p>Discover nearby police stations and their contact details. This service ensures you have quick access to law enforcement in case of emergencies.</p>
+            </div>
+        </div>
+
+        <!-- Crime Reporting Card -->
+        <div class="card" aria-label="Crime Reporting">
+            <h3><i class="fas fa-shield-alt"></i> Crime Reporting</h3>
+            <p>Get guidance on how to report crimes and connect directly with law enforcement agencies.</p>
+            <div class="dropdown-content">
+                <h4>Crime Reporting Steps</h4>
+                <ul>
+                    <li>Provide details about the incident to ensure accurate reporting.</li>
+                    <li>Know the steps to file a report online or in person.</li>
+                    <li>Access resources for victim support and legal assistance.</li>
+                    <li>Understand the importance of timely reporting for effective action.</li>
+                </ul>
+                <p>Follow the easy steps to report a crime. Your report will be sent to the relevant authorities who will take immediate action.</p>
+            </div>
+        </div>
+
+        <!-- Safety Tips Card -->
+        <div class="card" aria-label="Safety Tips">
+            <h3><i class="fas fa-lightbulb"></i> Safety Tips</h3>
+            <p>Learn essential safety tips to protect yourself and your community.</p>
+            <div class="dropdown-content">
+                <h4>Essential Safety Tips</h4>
+                <ul>
+                    <li><strong>Be Aware of Your Surroundings:</strong> Always pay attention to your environment, including the people around you. </li>
+                   
+                    
+                    <li><strong>Keep Emergency Contacts Handy:</strong> Have a list of important phone numbers, including local emergency services, family, and friends, easily accessible on your phone.</li>
+                    <li><strong>Use Trusted Transportation Options:</strong> When needing to travel, opt for reputable taxi services or rideshare apps. </li>
+                    <li><strong>Report Suspicious Activities:</strong> If you notice anything unusual or suspicious, do not hesitate to report it to local authorities.</li>
+                  
+                    <li><strong>Avoid Shortcuts:</strong> While it may be tempting to take a shortcut, especially through isolated areas, it's safer to stick to well-traveled routes where there are more people around.</li>
+                    
+                    
+                </ul>
+                <p>Stay aware of your surroundings, avoid risky areas, and know how to contact authorities in case of emergencies.</p>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="footer">
+        <p>&copy; 2024 Bengaluru Crime Chat</p>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+
+
+    <!-- Chat Popup -->
+    <div class="chat-popup" id="myChatPopup">
+        <div class="chat-header">
+            <h4>Chat with BCC</h4>
+            <span class="close-btn" onclick="closeChat()">×</span>
+        </div>
+        <div class="chat-messages"></div>
+    </div>
+
+    <!-- Clickable Chat Button -->
+    <button class="chat-button" id="chatButton" style="display: none;" onclick="window.location.href='/chatbot'">
+        🛡️ <!-- Shield emoji -->
+    </button>
+
+
+    <!-- Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Contact Us</h2>
+            <form id="contactForm">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="4" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        // Modal functionality
+        const modal = document.getElementById("contactModal");
+        const btn = document.getElementById("contactBtn");
+        const span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        // Form submission (showing a pop-up message)
+        document.getElementById("contactForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            // Display a pop-up message
+            alert("Message sent ✅");
+            
+            // Optionally close the modal after submission
+            modal.style.display = "none"; 
+        })
+        
+        
+        
+        // Show the chat button after 1 second
+        setTimeout(() => {
+            const chatButton = document.getElementById('chatButton');
+            chatButton.style.display = 'flex'; // Show the chat button
+
+            // Show the chat popup and display messages after the button is displayed
+            setTimeout(showChat, 1000); // Call showChat after another second
+        }, 1000);
+
+        // Function to show chat popup and display messages
+        function showChat() {
+            const chatPopup = document.querySelector('.chat-popup');
+            chatPopup.style.display = 'block'; // Show the chat popup
+
+            const botMessages = [
+                "How can we help you today?",
+                "Feel free to ask about crime categories!",
+                "We're here to assist you!"
+            ];
+
+            // Clear existing messages before displaying new ones
+            const chatMessagesDiv = document.querySelector('.chat-messages');
+            chatMessagesDiv.innerHTML = '';
+
+            // Show messages with a delay
+            botMessages.forEach((message, index) => {
+                setTimeout(() => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.classList.add('bot-message'); // Add class for styling
+                    messageDiv.textContent = message; // Set message text
+                    chatMessagesDiv.appendChild(messageDiv); // Append message to chat
+                    chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight; // Scroll to the bottom
+                }, index * 2000); // 2 seconds delay for each message
+            });
+        }
+
+        // Function to close chat popup
+        function closeChat() {
+            const chatPopup = document.querySelector('.chat-popup');
+            chatPopup.style.display = 'none'; // Hide the chat popup
+        }
+
+        // Show chat button when scrolling
+        window.onscroll = function () {
+            const chatButton = document.getElementById('chatButton');
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                chatButton.style.display = 'flex'; // Show button on scroll
+            } else {
+                chatButton.style.display = 'none'; // Hide button when at the top
+            }
+        };;
+
+    </script>
+</body>
+</html>
+
